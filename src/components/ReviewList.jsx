@@ -1,14 +1,14 @@
 import React from "react";
 import ReviewItem from "./ReviewItem";
 
-const ReviewList = ({ items }) => {
+const ReviewList = ({ items, onDelete }) => {
   return (
     <>
       <ul>
         {items.map((item) => {
           return (
-            <li>
-              <ReviewItem item={item} />
+            <li key={item.id}>
+              <ReviewItem item={item} onDelete={onDelete} />
             </li>
           );
         })}
