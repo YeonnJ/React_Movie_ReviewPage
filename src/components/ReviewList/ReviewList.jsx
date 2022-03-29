@@ -1,5 +1,5 @@
 import React from "react";
-import ReviewItem from "./ReviewItem";
+import ReviewItem from "../ReviewItem/ReviewItem";
 
 const ReviewList = ({ items, onDelete }) => {
   return (

@@ -1,10 +1,10 @@
 import "./App.css";
-import ReviewList from "./components/ReviewList";
-import mockItems from "./components/mock.json";
+import ReviewList from "./components/ReviewList/ReviewList";
 import { useState } from "react";
+import { getReviews } from "./components/api";
 
 function App() {
-  const [items, setItems] = useState(mockItems);
+  const [items, setItems] = useState([]);
   const [order, setOrder] = useState("createdAt");
   const sortItem = items.sort((a, b) => b[order] - a[order]); //평점 높은순으로 보여주기
 
@@ -17,6 +17,11 @@ function App() {
     setItems(nextItems);
   };
 
+  const handleLoadClick = async () => {
+    const { reviews } = await getReviews();
+    setItems(reviews);
+  };
+
   return (
     <div className="App">
       <div>
@@ -24,6 +29,7 @@ function App() {
         <button onClick={handleBestClick}>베스트순</button>
       </div>
       <ReviewList items={sortItem} onDelete={handleDelete} />
+      <button onClick={handleLoadClick}>불러오기</button>
     </div>
   );
 }
