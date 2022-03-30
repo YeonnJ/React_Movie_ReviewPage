@@ -10,6 +10,8 @@ function App() {
   const [order, setOrder] = useState("createdAt");
   const [offset, setOffset] = useState(0);
   const [hasNext, setHasNext] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingError, setLoadingError] = useState(null);
 
   const sortItem = items.sort((a, b) => b[order] - a[order]); //평점 높은순으로 보여주기
 
@@ -23,11 +25,23 @@ function App() {
   };
 
   const handleLoad = async (options) => {
-    const { reviews, paging } = await getReviews(options);
+    let result;
+    try {
+      setIsLoading(true);
+      setLoadingError(null);
+      result = await getReviews(options);
+    } catch (error) {
+      setLoadingError(error);
+      return;
+    } finally {
+      setIsLoading(false);
+    }
+    const { reviews, paging } = result;
+
     if (options.offset === 0) {
       setItems(reviews);
     } else {
-      setItems([...items, ...reviews]);
+      setItems((prevItems) => [...prevItems, ...reviews]);
     }
 
     setOffset(options.offset + reviews.length);
@@ -49,15 +63,12 @@ function App() {
         <button onClick={handleBestClick}>베스트순</button>
       </div>
       <ReviewList items={sortItem} onDelete={handleDelete} />
-      <button disabled={!hasNext} onClick={handleLoadMore}>
-        더보기
-      </button>
-
-      {
-        <button disabled={!hasNext} onClick={handleLoadMore}>
+      {hasNext && (
+        <button disabled={isLoading} onClick={handleLoadMore}>
           더보기
         </button>
-      }
+      )}
+      {loadingError?.message && <span>{loadingError.message}</span>}
     </div>
   );
 }
