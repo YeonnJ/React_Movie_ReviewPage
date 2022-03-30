@@ -52,6 +52,12 @@ function App() {
       <button disabled={!hasNext} onClick={handleLoadMore}>
         더보기
       </button>
+
+      {
+        <button disabled={!hasNext} onClick={handleLoadMore}>
+          더보기
+        </button>
+      }
     </div>
   );
 }
